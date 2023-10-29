@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.otus</groupId>
-    <artifactId>Otus-JQA_Basic_hw4</artifactId>
+    <artifactId>Otus-JQA_Basic_hw5</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -18,11 +18,13 @@
         <selenium-java.version>4.13.0</selenium-java.version>
         <log4j-core.version>2.17.1</log4j-core.version>
         <log4j-slf4j2-impl.version>2.20.0</log4j-slf4j2-impl.version>
+        <javafaker.version>1.0.2</javafaker.version>
 
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
 
         <browser>chrome</browser>
+        <base.url>https://otus.ru</base.url>
     </properties>
 
     <dependencies>
@@ -54,6 +56,12 @@
             <version>${log4j-slf4j2-impl.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>${javafaker.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -75,6 +83,7 @@
                 <configuration>
                     <systemProperties>
                         <browser.name>${browser}</browser.name>
+                        <base.url>${base.url}</base.url>
                     </systemProperties>
                 </configuration>
             </plugin>

@@ -1,5 +1,6 @@
 package waiters;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -28,7 +29,17 @@ public class Waiter {
     public boolean waitForElementVisible(WebElement element) {
         return waitForCondition(ExpectedConditions.visibilityOf(element));
     }
-//
+    public boolean waitForElementVisible(By locator) {
+        return waitForCondition(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    public boolean waitForElementToBeClickable(WebElement element) {
+        return waitForCondition(ExpectedConditions.elementToBeClickable(element));
+    }
+
+    public boolean waitForElementToBeClickable(By locator) {
+        return waitForCondition(ExpectedConditions.elementToBeClickable(locator));
+    }
 //    public boolean waitForElementNotVisible(WebElement element) {
 //        return waitForCondition(ExpectedConditions.invisibilityOf(element));
 //    }

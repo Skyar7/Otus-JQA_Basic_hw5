@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import pages.AbsBasePage;
 import pages.MainPage;
+import pages.PersonalPage;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -62,6 +63,7 @@ public static void setupDriver() {
     @Test
     public void personalTest() {
         MainPage mainPage = new MainPage(driver);
+        PersonalPage personalPage = new PersonalPage(driver);
 
         log.info("Открытие сайта");
         mainPage.open("/");
@@ -69,11 +71,11 @@ public static void setupDriver() {
         log.info("Авторизация на сайте");
         mainPage.login();
 
+        log.info("Вход в личный кабинет");
+        mainPage.goToPersonalPage();
 
-
-//        log.info("Вход в личный кабинет");
-//
-//        log.info("Заполнение данных");
+        log.info("Заполнение данных");
+        personalPage.fillData();
 //
 //        log.info("Сохранение");
 //

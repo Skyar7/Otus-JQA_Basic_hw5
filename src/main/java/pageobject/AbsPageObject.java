@@ -4,20 +4,20 @@ import com.github.javafaker.Faker;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import waiters.Waiters;
 
 public abstract class AbsPageObject {
 
     protected WebDriver driver;
     protected Actions actions;
-    protected Faker faker = new Faker();
+    protected Waiters waiters;
+    protected Faker faker;
 
     public AbsPageObject (WebDriver driver) {
         this.driver = driver;
         this.actions = new Actions(driver);
-    }
-
-    public void clickElement(WebElement element) {
-        element.click();
+        this.waiters = new Waiters(driver);
+        this.faker = new Faker();
     }
 
     public void clearAndSend(WebElement element, String field) {

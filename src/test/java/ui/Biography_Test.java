@@ -1,6 +1,7 @@
 package ui;
 
-import com.github.javafaker.Faker;
+import components.FadeEnterComponent;
+import components.HeaderContainerComponent;
 import data.ICityData;
 import factory.WebDriverFactory;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -8,16 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
-import pages.AbsBasePage;
 import pages.MainPage;
 import pages.PersonalPage;
-
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 public class Biography_Test {
     private WebDriver driver;
@@ -64,15 +57,16 @@ public static void setupDriver() {
     public void personalTest() {
         MainPage mainPage = new MainPage(driver);
         PersonalPage personalPage = new PersonalPage(driver);
+        HeaderContainerComponent headerContainerComponent = new HeaderContainerComponent(driver);
 
         log.info("Открытие сайта");
         mainPage.open("/");
 
         log.info("Авторизация на сайте");
-        mainPage.login();
+        this.login();
 
         log.info("Вход в личный кабинет");
-        mainPage.goToPersonalPage();
+        headerContainerComponent.goToPersonalPage();
 
         log.info("Заполнение данных");
         personalPage.fillData();
@@ -114,4 +108,11 @@ public static void setupDriver() {
 //
 ////        log.info(driver.manage().getCookies());
     }
+    private void login() {
+        FadeEnterComponent fadeEnterComponent = new FadeEnterComponent(driver);
+        HeaderContainerComponent headerContainerComponent = new HeaderContainerComponent(driver);
+
+        headerContainerComponent.useLoginButton();
+        fadeEnterComponent.loginDataEnter();
+    };
 }

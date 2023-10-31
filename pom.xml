@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <junit.version>5.10.0</junit.version>
-        <webdrivermanager.version>5.5.3</webdrivermanager.version>
+        <webdrivermanager.version>5.6.0</webdrivermanager.version>
         <selenium-java.version>4.13.0</selenium-java.version>
         <log4j-core.version>2.17.1</log4j-core.version>
         <log4j-slf4j2-impl.version>2.20.0</log4j-slf4j2-impl.version>

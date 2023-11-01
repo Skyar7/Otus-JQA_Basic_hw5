@@ -1,10 +1,11 @@
 package data;
 
-public enum BrowsersData {
-    CHROME("chrome");
+public enum GenderData {
+    MALE("m"),
+    FEMALE("f");
     private String name;
 
-    BrowsersData(String name) {
+    GenderData(String name) {
         this.name = name;
     }
 

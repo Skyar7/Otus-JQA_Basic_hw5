@@ -26,7 +26,9 @@ public class HeaderContainerComponent extends AbsPageObject {
         WebElement headName = driver.findElement(By.cssSelector(headNameSelector));
         moveToElement(headName);
 
-        WebElement popupMyProfile = driver.findElement(By.xpath("//a[contains(text(), 'Мой профиль')]"));
-        moveAndClick(popupMyProfile);
+        String myProfileLocator = "//a[contains(text(), 'Мой профиль')]";
+        waiters.waitForElementVisible(By.xpath(myProfileLocator));
+        WebElement dropDownMyProfile = driver.findElement(By.xpath(myProfileLocator));
+        moveAndClick(dropDownMyProfile);
     }
 }

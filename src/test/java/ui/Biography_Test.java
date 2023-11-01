@@ -3,7 +3,6 @@ package ui;
 import components.popups.AuthPopupComponent;
 import components.HeaderContainerComponent;
 import driver.WebDriverFactory;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;

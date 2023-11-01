@@ -1,6 +1,6 @@
 package data;
 
-public enum CountryData {
+public enum CountryData implements ICityData {
     RUSSIA("Россия");
 
     private String name;
@@ -8,8 +8,13 @@ public enum CountryData {
     CountryData(String name) {
         this.name = name;
     }
-
+    @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public CountryData getCountryData() {
+        return null;
     }
 }

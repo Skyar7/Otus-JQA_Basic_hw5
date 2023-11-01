@@ -1,5 +1,6 @@
 package components;
 
+import components.popups.AuthPopupComponent;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,7 +13,10 @@ public class HeaderContainerComponent extends AbsPageObject {
     }
 
     public void useLoginButton () {
-        driver.findElement(By.xpath("//button[contains(text(),'Войти')]")).click();
+
+        String loginButtonLocator = "//button[contains(text(),'Войти')]";
+        waiters.waitForElementVisible(By.cssSelector(loginButtonLocator));
+        driver.findElement(By.xpath(loginButtonLocator)).click();
     }
 
     public void goToPersonalPage() {

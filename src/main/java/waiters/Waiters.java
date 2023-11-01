@@ -11,12 +11,18 @@ import java.time.Duration;
 public class Waiters {
 
     private WebDriver driver;
+    private int timeoutSec = 5;
+
     public Waiters(WebDriver driver) {
         this.driver = driver;
     }
+    public Waiters(WebDriver driver, int timeoutSec) {
+        this.driver = driver;
+        this.timeoutSec = timeoutSec;
+    }
 
     public boolean waitForCondition(ExpectedCondition condition) {
-        WebDriverWait webDriverWait = new WebDriverWait(this.driver, Duration.ofSeconds(10));
+        WebDriverWait webDriverWait = new WebDriverWait(this.driver, Duration.ofSeconds(timeoutSec));
         try {
             webDriverWait.until(condition);
             return true;

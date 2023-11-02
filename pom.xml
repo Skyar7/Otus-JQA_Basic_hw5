@@ -19,6 +19,7 @@
         <log4j-core.version>2.17.1</log4j-core.version>
         <log4j-slf4j2-impl.version>2.20.0</log4j-slf4j2-impl.version>
         <javafaker.version>1.0.2</javafaker.version>
+        <icu4j.version>73.2</icu4j.version>
 
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
@@ -58,6 +59,11 @@
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
             <version>${javafaker.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>${icu4j.version}</version>
         </dependency>
     </dependencies>
 

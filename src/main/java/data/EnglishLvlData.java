@@ -20,4 +20,3 @@ public enum EnglishLvlData {
         return name;
     }
 }
-

@@ -3,13 +3,13 @@ package pages;
 import org.openqa.selenium.WebDriver;
 
 public class MainPage extends AbsBasePage {
-    private String path = "/";
+    private String pagePath = "/";
 
     public MainPage(WebDriver driver) {
         super(driver);
     }
 
-    public void open() {
-        driver.get(BASE_URL + this.path);
+    public String getPagePath() {
+        return pagePath;
     }
 }

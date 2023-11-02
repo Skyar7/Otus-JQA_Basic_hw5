@@ -3,7 +3,7 @@ package driver;
 import data.BrowsersData;
 import driver.impl.ChromeWebDriver;
 import driver.impl.IWebDriver;
-import exeptions.BrowserNotSupportedException;
+import exceptions.BrowserNotSupportedException;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;

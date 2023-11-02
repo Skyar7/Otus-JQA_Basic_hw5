@@ -35,7 +35,7 @@ public class Biography_Test {
         HeaderContainerComponent headerContainerComponent = new HeaderContainerComponent(driver);
 
         log.info("Открытие сайта");
-        mainPage.open("/");
+        mainPage.open();
 
         log.info("Авторизация на сайте");
         this.login();

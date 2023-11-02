@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 
 public class PersonalPage extends AbsBasePage {
 
+    // Имя, фамилия, дата рождения.
     private String firstName = "";
     private String lastName = "";
     private String firstNameLatin = "";
@@ -26,11 +27,28 @@ public class PersonalPage extends AbsBasePage {
     private WebElement lNameLatinField = null;
     private WebElement blogNameField = null;
     private WebElement dateOfBirthField = null;
+
+    // Основная информация.
     private WebElement countryField = null;
     private WebElement cityField = null;
     private WebElement englishLvlField = null;
     private ICityData cityData = null;
     private EnglishLvlData englishLvlData = null;
+    private boolean readyToMoveFlag;
+    private boolean scheduleFulldayFlag;
+    private boolean scheduleAgileFlag;
+    private boolean scheduleRemoteFlag;
+    WebElement readyToRelYesInput = null;
+    WebElement scheduleFulldayInput = null;
+    WebElement scheduleAgileInput = null;
+    WebElement scheduleRemoteInput = null;
+
+    // Контактная информация.
+
+    // Другое.
+
+    // Опыт разработки.
+
 
     public PersonalPage(WebDriver driver) {
         super(driver);
@@ -60,6 +78,34 @@ public class PersonalPage extends AbsBasePage {
 
         englishLvlData = EnglishLvlData.values()[faker.random().nextInt(EnglishLvlData.values().length)];
         this.selectEnglishLvl(englishLvlData);
+
+
+        this.readyToRelYesInput = driver.findElement(By.cssSelector("#id_ready_to_relocate_1"));
+
+        if (readyToRelYesInput.isSelected()) {
+            driver.findElement(By.xpath("//span[contains(text(), 'Нет')]")).click();
+            this.readyToMoveFlag = false;
+        } else {
+            driver.findElement(By.xpath("//span[contains(text(), 'Да')]")).click();
+            this.readyToMoveFlag = true;
+        }
+
+        this.scheduleFulldayInput = driver.findElement(By.xpath("//input[@title = 'Полный день']"));
+        this.scheduleAgileInput = driver.findElement(By.xpath("//input[@title = 'Гибкий график']"));
+        this.scheduleRemoteInput = driver.findElement(By.xpath("//input[@title = 'Удаленно']"));
+
+        scheduleFulldayFlag = scheduleFulldayInput.isSelected();
+        scheduleAgileFlag = scheduleAgileInput.isSelected();
+        scheduleRemoteFlag = scheduleRemoteInput.isSelected();
+
+        driver.findElement(By.xpath("//span[contains(text(), 'Полный день')]")).click();
+        scheduleFulldayFlag = !scheduleFulldayFlag;
+
+        driver.findElement(By.xpath("//span[contains(text(), 'Гибкий график')]")).click();
+        scheduleAgileFlag = !scheduleAgileFlag;
+
+        driver.findElement(By.xpath("//span[contains(text(), 'Удаленно')]")).click();
+        scheduleRemoteFlag = !scheduleRemoteFlag;
 
 //    //LocalDateAssertion
 //    private void checkDate(LocalDate expectedDate){

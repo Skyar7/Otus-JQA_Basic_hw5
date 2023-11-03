@@ -13,26 +13,28 @@ import pages.PersonalPage;
 public class Biography_Test {
     private WebDriver driver;
     private Logger log = LogManager.getLogger(Biography_Test.class);
+    private MainPage mainPage;
+    private PersonalPage personalPage;
+    private HeaderContainerComponent headerContainerComponent;
 
     @BeforeEach
     public void startDriver() {
         this.driver = new WebDriverFactory().newDriver();
+        mainPage = new MainPage(driver);
+        personalPage = new PersonalPage(driver);
+        headerContainerComponent = new HeaderContainerComponent(driver);
     }
 
 //    @AfterEach
-//    public void shutdownDriver() {
-//        if (this.driver != null) {
-//            this.driver.close();
-//            this.driver.quit();
-//        }
-//    }
-//
+    public void shutdownDriver() {
+        if (this.driver != null) {
+            this.driver.close();
+            this.driver.quit();
+        }
+    }
 
     @Test
     public void personalTest() {
-        MainPage mainPage = new MainPage(driver);
-        PersonalPage personalPage = new PersonalPage(driver);
-        HeaderContainerComponent headerContainerComponent = new HeaderContainerComponent(driver);
 
         log.info("Открытие сайта");
         mainPage.open(mainPage.getPagePath());
@@ -45,30 +47,24 @@ public class Biography_Test {
 
         log.info("Заполнение данных");
         personalPage.fillData();
-//
-//        log.info("Сохранение");
-//
-//        log.info("Открытие чистого браузера");
-//
-//        log.info("Авторизация на сайте");
-//
-//        log.info("Вход в личный кабинет");
-//
-//        log.info("Проверка данных");
-//
-//
-//
-//        //Faker
-//        List<String> elements = new ArrayList<>();
-//        elements.add ("1");
-//        elements.add ("2");
-//        elements.add ("3");
-//
-//        Faker faker = new Faker();
-//        String workFormats = faker.options().option("Полный день", "Частичный день", "Удалёнка");
-//        String fakerList = faker.options().nextElement(elements);
 
-//
+        log.info("Сохранение");
+        personalPage.saveData();
+
+        log.info("Открытие https://otus.ru в \"чистом браузере\".");
+        shutdownDriver();
+        startDriver();
+        mainPage.open(mainPage.getPagePath());
+
+        log.info("Авторизация на сайте");
+        this.login();
+
+        log.info("Вход в личный кабинет");
+        headerContainerComponent.goToPersonalPage();
+
+        log.info("Проверка данных");
+        personalPage.checkData();
+
     }
     public void login() {
         AuthPopupComponent authPopupComponent = new AuthPopupComponent(driver);

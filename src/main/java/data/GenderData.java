@@ -1,15 +1,21 @@
 package data;
 
 public enum GenderData {
-    MALE("m"),
-    FEMALE("f");
-    private String name;
+    MALE("m", "1"),
+    FEMALE("f", "2");
+    private String value = "";
+    private String index = "";
 
-    GenderData(String name) {
-        this.name = name;
+    GenderData(String value, String index) {
+        this.value = value;
+        this.index = index;
     }
 
-    public String getName() {
-        return name;
+    public String getValue() {
+        return value;
+    }
+
+    public String getIndex() {
+        return index;
     }
 }

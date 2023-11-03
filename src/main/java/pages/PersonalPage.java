@@ -3,8 +3,12 @@ package pages;
 import com.ibm.icu.text.Transliterator;
 import data.ContactMethodData;
 import data.EnglishLvlData;
+import data.GenderData;
 import data.cities.ICityData;
 import data.cities.CitiesData;
+import data.dev_experience.DevExpValuesData;
+import data.dev_experience.TechStackData;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -19,27 +23,26 @@ public class PersonalPage extends AbsBasePage {
 
     private String pagePath = "/lk/biography/personal/";
 
-    // Имя, фамилия, дата рождения.
+    // ИМЯ, ФАМИЛИЯ, ДАТА РОЖДЕНИЯ.
+    private static String firstName = "";
+    private static String lastName = "";
+    private static String firstNameLatin = "";
+    private static String lastNameLatin = "";
+    private static String blogName = "";
+    private static String birthDate = "";
+    private String fNameFieldId = "id_fname";
+    private String lNameFieldId = "id_lname";
+    private String fNameLatinFieldId = "id_fname_latin";
+    private String lNameLatinFieldId = "id_lname_latin";
+    private String blogNameFieldId = "id_blog_name";
+    private String dateOfBirthFieldName = "date_of_birth";
 
-    private String firstName = "";
-    private String lastName = "";
-    private String firstNameLatin = "";
-    private String lastNameLatin = "";
-    private String blogName = "";
-    private String birthDate = "";
-    private WebElement fNameField = null;
-    private WebElement lNameField = null;
-    private WebElement fNameLatinField = null;
-    private WebElement lNameLatinField = null;
-    private WebElement blogNameField = null;
-    private WebElement dateOfBirthField = null;
-
-    // Основная информация.
+    // ОСНОВНАЯ ИНФОРМАЦИЯ.
+    private ICityData cityData = null;
     private WebElement countryField = null;
     private WebElement cityField = null;
-    private WebElement englishLvlField = null;
-    private ICityData cityData = null;
     private EnglishLvlData englishLvlData = null;
+    private WebElement englishLvlField = null;
     private boolean readyToMoveFlag;
     private boolean scheduleFulldayFlag;
     private boolean scheduleAgileFlag;
@@ -49,16 +52,24 @@ public class PersonalPage extends AbsBasePage {
     private WebElement scheduleAgileInput = null;
     private WebElement scheduleRemoteInput = null;
 
-    // Контактная информация.
+    // КОНТАКТНАЯ ИНФОРМАЦИЯ.
     private ContactMethodData contactMethodData1 = null;
     private ContactMethodData contactMethodData2 = null;
     private String contactMethodValue1 = "";
     private String contactMethodValue2 = "";
 
-    // Другое.
+    // ДРУГОЕ.
+    private GenderData genderData = null;
+    private String company = "";
+    private String jobtitle = "";
+    private WebElement companyField = null;
+    private WebElement jobtitleField = null;
 
-    // Опыт разработки.
-
+    // ОПЫТ РАЗРАБОТКИ.
+    private TechStackData techStackData = null;
+    private WebElement techStackField = null;
+    private DevExpValuesData devExpValueData = null;
+    private WebElement devExpValueField = null;
 
     public PersonalPage(WebDriver driver) {
         super(driver);
@@ -70,24 +81,25 @@ public class PersonalPage extends AbsBasePage {
 
     public void fillData() {
 
-        // Имя, фамилия, дата рождения.
+        // ИМЯ, ФАМИЛИЯ, ДАТА РОЖДЕНИЯ.
+
         Transliterator toCyrillicTrans = Transliterator.getInstance("Latin-Russian/BGN");
         this.firstNameLatin = faker.name().firstName();
         this.lastNameLatin = faker.name().lastName();
         this.firstName = toCyrillicTrans.transliterate(firstNameLatin);
         this.lastName = toCyrillicTrans.transliterate(lastNameLatin);
-        this.blogName = faker.harryPotter().spell();
+        this.blogName = firstNameLatin + " " + faker.harryPotter().spell();
         this.birthDate = faker.date().birthday().toInstant().atZone(ZoneId.systemDefault())
                 .toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 
-        clearAndSend(this.fNameField = driver.findElement(By.id("id_fname")), firstName);
-        clearAndSend(this.lNameField = driver.findElement(By.id("id_lname")), lastName);
-        clearAndSend(this.fNameLatinField = driver.findElement(By.id("id_fname_latin")), firstNameLatin);
-        clearAndSend(this.lNameLatinField = driver.findElement(By.id("id_lname_latin")), lastNameLatin);
-        clearAndSend(this.blogNameField = driver.findElement(By.id("id_blog_name")), blogName);
-        clearAndSend(this.dateOfBirthField = driver.findElement(By.name("date_of_birth")), birthDate);
+        clearAndSend(driver.findElement(By.id(fNameFieldId)), firstName);
+        clearAndSend(driver.findElement(By.id(lNameFieldId)), lastName);
+        clearAndSend(driver.findElement(By.id(fNameLatinFieldId)), firstNameLatin);
+        clearAndSend(driver.findElement(By.id(lNameLatinFieldId)), lastNameLatin);
+        clearAndSend(driver.findElement(By.id(blogNameFieldId)), blogName);
+        clearAndSend(driver.findElement(By.name(dateOfBirthFieldName)), birthDate);
 
-        // Основная информация.
+        // ОСНОВНАЯ ИНФОРМАЦИЯ.
 
         // Выбор страны и города.
         this.cityData = CitiesData.values()[faker.random().nextInt(CitiesData.values().length)];
@@ -126,22 +138,63 @@ public class PersonalPage extends AbsBasePage {
         driver.findElement(By.xpath("//span[contains(text(), 'Удаленно')]")).click();
         scheduleRemoteFlag = !scheduleRemoteFlag;
 
-        // Контактная информация.
+        // КОНТАКТНАЯ ИНФОРМАЦИЯ.
 
-        // Выбор способа связи.
-        this.contactMethodData1 = ContactMethodData.values()[faker.random().nextInt(EnglishLvlData.values().length)];
+        this.contactMethodData1 = ContactMethodData.values()[faker.random().nextInt(ContactMethodData.values().length)];
         this.contactMethodValue1 = faker.internet().emailAddress();
         this.addContactMethod(contactMethodData1, contactMethodValue1);
 
-        this.contactMethodData2 = ContactMethodData.values()[faker.random().nextInt(EnglishLvlData.values().length)];
+        this.contactMethodData2 = ContactMethodData.values()[faker.random().nextInt(ContactMethodData.values().length)];
         this.contactMethodValue2 = faker.phoneNumber().cellPhone();
         this.addContactMethod(contactMethodData2, contactMethodValue2);
 
-//    //LocalDateAssertion
-//    private void checkDate(LocalDate expectedDate){
-//        Assertions.assertEquals(expectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.of("ru"))), element.getText());
-//    }
+        // ДРУГОЕ.
+
+        // Выбор пола.
+        this.genderData = GenderData.values()[faker.random().nextInt(GenderData.values().length)];
+        this.selectGender(genderData);
+
+        // Компания.
+        this.companyField = driver.findElement(By.id("id_company"));
+        company = faker.company().name();
+        clearAndSend(companyField, company);
+
+        // Должность.
+        this.jobtitleField = driver.findElement(By.id("id_work"));
+        jobtitle = faker.company().profession();
+        clearAndSend(jobtitleField, jobtitle);
+
+        // ОПЫТ РАЗРАБОТКИ.
+
+        this.techStackData = TechStackData.values()[faker.random().nextInt(TechStackData.values().length)];
+        this.devExpValueData = DevExpValuesData.values()[faker.random().nextInt(DevExpValuesData.values().length)];
+        this.selectDevExp(techStackData, devExpValueData);
     }
+
+    public void saveData () {
+        driver.findElement(By.cssSelector("button[title='Сохранить и заполнить позже']")).click();
+    }
+
+    public void checkData () {
+
+        // ИМЯ, ФАМИЛИЯ, ДАТА РОЖДЕНИЯ.
+
+        Assertions.assertEquals(firstName, driver.findElement(By.id(fNameFieldId)).getAttribute("value"));
+        Assertions.assertEquals(lastName, driver.findElement(By.id(lNameFieldId)).getAttribute("value"));
+        Assertions.assertEquals(firstNameLatin, driver.findElement(By.id(fNameLatinFieldId)).getAttribute("value"));
+        Assertions.assertEquals(lastNameLatin, driver.findElement(By.id(lNameLatinFieldId)).getAttribute("value"));
+        Assertions.assertEquals(blogName, driver.findElement(By.id(blogNameFieldId)).getAttribute("value"));
+        Assertions.assertEquals(birthDate, driver.findElement(By.name(dateOfBirthFieldName)).getAttribute("value"));
+
+        // ОСНОВНАЯ ИНФОРМАЦИЯ.
+
+        // КОНТАКТНАЯ ИНФОРМАЦИЯ.
+
+        // ДРУГОЕ.
+
+        // ОПЫТ РАЗРАБОТКИ.
+    }
+
     private void selectCity(ICityData cityData) {
         this.countryField = driver.findElement(By.xpath("//input[@name= 'country']/following::div[1]"));
         countryField.click();
@@ -179,5 +232,27 @@ public class PersonalPage extends AbsBasePage {
 
         WebElement contactField = driver.findElement(By.xpath("(//input[@class ='input input_straight-top-left input_straight-bottom-left lk-cv-block__input lk-cv-block__input_9 lk-cv-block__input_md-8'])[last()]"));
         clearAndSend(contactField, contactFieldValue);
+    }
+
+    private void selectGender(GenderData genderData) {
+        driver.findElement(By.id("id_gender")).click();
+        String genderDropdownLocator = String.format("//option[contains(@value, '%s')]", genderData.getValue());
+        driver.findElement(By.xpath(genderDropdownLocator)).click();
+    }
+
+    private void selectDevExp(TechStackData techStackData, DevExpValuesData devExpValuesData) {
+        driver.findElement(By.cssSelector("a[title='Добавить']")).click();
+
+        //Выбор технологии.
+        this.techStackField = driver.findElement(By.id("id_experience-0-experience"));
+        techStackField.click();
+        String techStackDropdownLocator = String.format("//option[contains(@value, '%s')]", techStackData.getName());
+        driver.findElement(By.xpath(techStackDropdownLocator)).click();
+
+        // Выбор опыта.
+        this.devExpValueField = driver.findElement(By.id("id_experience-0-level"));
+        devExpValueField.click();
+        String devExpDropdownLocator = String.format("//option[contains(text(), '%s')]", devExpValuesData.getName());
+        driver.findElement(By.xpath(devExpDropdownLocator)).click();
     }
 }

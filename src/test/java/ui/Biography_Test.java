@@ -22,7 +22,6 @@ public class Biography_Test {
         this.driver = new WebDriverFactory().newDriver();
         mainPage = new MainPage(driver);
         personalPage = new PersonalPage(driver);
-        headerContainerComponent = new HeaderContainerComponent(driver);
     }
 
     @AfterEach

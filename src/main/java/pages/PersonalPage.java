@@ -134,8 +134,8 @@ public class PersonalPage extends AbsBasePage {
         this.selectEnglishLvl(englishLvlsData);
 
         // Выбор готовности к переезду.
-
         String workRelTemplLocator = "//span[contains(@class,'radio__label')][contains(text(),'%s')]";
+
         if (readyToRelYesInput.isSelected()) {
             $(By.xpath(String.format(workRelTemplLocator, "Нет"))).click();
             readyToRelFlag = false;
@@ -241,7 +241,6 @@ public class PersonalPage extends AbsBasePage {
         Assertions.assertTrue($(By.xpath(String.format(choiceDevExpLocator, devExpValueData.getName()))).isSelected());
 
         // Сброс полей контактов и опыта разработки
-
         $(By.xpath("(//button[contains(@type,'button')][contains(text(),'Удалить')])[2]")).click();
         $(By.xpath("(//button[contains(@type,'button')][contains(text(),'Удалить')])[4]")).click();
         $(By.cssSelector(".experience-row__remove.ic-close.js-formset-delete")).click();

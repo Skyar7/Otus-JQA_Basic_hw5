@@ -34,11 +34,11 @@ public class AuthPopupComponent extends AbsPageObject implements IPopups {
         String emailSelector = "input[name='email']";
         String passwordSelector = "input[type='password']";
 
-        $(By.xpath("//div[@class='sc-rq8xzv-1 hGvqzc sc-11ptd2v-1 liHMCp']")).click();
+        $(By.xpath("//div[./input[@name='email']]")).click();
         standardWaiters.waitForElementVisible(By.cssSelector(emailSelector));
         $(By.cssSelector(emailSelector)).sendKeys(this.LOGIN);
 
-        $(By.xpath("//div[@class='sc-rq8xzv-1 hGvqzc sc-11ptd2v-1-Component ciraFX']")).click();
+        $(By.xpath("//div[./input[@type='password']]")).click();
         standardWaiters.waitForElementVisible(By.cssSelector(passwordSelector));
         $(By.cssSelector(passwordSelector)).sendKeys(this.PASSWORD);
 

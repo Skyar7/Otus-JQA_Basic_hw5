@@ -15,7 +15,7 @@ public class WebDriverFactory {
     private final String BROWSER_NAME = System.getProperty("browser.name", "chrome");
 
     public WebDriver newDriver() {
-
+        
         BrowsersData userBrowser = null;
 
         for(BrowsersData browser: BrowsersData.values()) {

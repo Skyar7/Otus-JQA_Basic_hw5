@@ -1,10 +1,10 @@
 package pages;
 
 import com.ibm.icu.text.Transliterator;
-import data.ContactMethodData;
-import data.EnglishLvlData;
-import data.GenderData;
-import data.cities.ICityData;
+import data.ContactMethodsData;
+import data.EnglishLvlsData;
+import data.GendersData;
+import data.cities.ICitiesData;
 import data.cities.CitiesData;
 import data.dev_experience.DevExpValuesData;
 import data.dev_experience.TechStackData;
@@ -13,11 +13,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import waiters.Waiters;
+import waiters.StandardWaiters;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.TreeMap;
 
 public class PersonalPage extends AbsBasePage {
 
@@ -30,46 +32,68 @@ public class PersonalPage extends AbsBasePage {
     private static String lastNameLatin = "";
     private static String blogName = "";
     private static String birthDate = "";
-    private String fNameFieldId = "id_fname";
-    private String lNameFieldId = "id_lname";
-    private String fNameLatinFieldId = "id_fname_latin";
-    private String lNameLatinFieldId = "id_lname_latin";
-    private String blogNameFieldId = "id_blog_name";
-    private String dateOfBirthFieldName = "date_of_birth";
+    @FindBy(id = "id_fname")
+    private WebElement fNameField;
+    @FindBy(id = "id_lname")
+    private WebElement lNameField;
+    @FindBy(id = "id_fname_latin")
+    private WebElement fNameLatinField;
+    @FindBy(id = "id_lname_latin")
+    private WebElement lNameLatinField;
+    @FindBy(id = "id_blog_name")
+    private WebElement blogNameField;
+    @FindBy(name = "date_of_birth")
+    private WebElement dateOfBirthField;
 
     // ОСНОВНАЯ ИНФОРМАЦИЯ.
-    private ICityData cityData = null;
-    private WebElement countryField = null;
-    private WebElement cityField = null;
-    private EnglishLvlData englishLvlData = null;
-    private WebElement englishLvlField = null;
-    private boolean readyToMoveFlag;
-    private boolean scheduleFulldayFlag;
-    private boolean scheduleAgileFlag;
-    private boolean scheduleRemoteFlag;
-    private WebElement readyToRelYesInput = null;
-    private WebElement scheduleFulldayInput = null;
-    private WebElement scheduleAgileInput = null;
-    private WebElement scheduleRemoteInput = null;
+    private static ICitiesData cityData = null;
+    private static EnglishLvlsData englishLvlsData = null;
+    private static boolean readyToRelFlag;
+    private static boolean scheduleFulldayFlag;
+    private static boolean scheduleAgileFlag;
+    private static boolean scheduleRemoteFlag;
+    @FindBy (xpath = "//input[@name= 'country']/following::div[1]")
+    private WebElement countryField;
+    @FindBy (xpath = "//input[@data-title= 'Город']/following::div[1]")
+    private WebElement cityField;
+    @FindBy (css = "div[class='select lk-cv-block__input lk-cv-block__input_full js-lk-cv-custom-select']")
+    private WebElement englishLvlField;
+    @FindBy (css = "#id_ready_to_relocate_1")
+    private WebElement readyToRelYesInput;
+    @FindBy(xpath = "//input[@title = 'Полный день']")
+    private WebElement scheduleFulldayInput;
+    @FindBy(xpath =" //input[@title = 'Гибкий график']")
+    private WebElement scheduleAgileInput;
+    @FindBy(xpath = "//input[@title = 'Удаленно']")
+    private WebElement scheduleRemoteInput;
 
     // КОНТАКТНАЯ ИНФОРМАЦИЯ.
-    private ContactMethodData contactMethodData1 = null;
-    private ContactMethodData contactMethodData2 = null;
-    private String contactMethodValue1 = "";
-    private String contactMethodValue2 = "";
+    private static ContactMethodsData contactMethodsData1 = null;
+    private static ContactMethodsData contactMethodsData2 = null;
+    private static String contactMethodValue1 = "";
+    private static String contactMethodValue2 = "";
+    private static String contactMethodSettedLocator1 = "";
+    private static String contactMethodSettedLocator2 = "";
 
     // ДРУГОЕ.
-    private GenderData genderData = null;
-    private String company = "";
-    private String jobtitle = "";
-    private WebElement companyField = null;
-    private WebElement jobtitleField = null;
+    private static GendersData gendersData = null;
+    private static String choiceGenderLocator = "//option[@value='%s']";
+    private static String company = "";
+    private static String jobtitle = "";
+    @FindBy (id = "id_company")
+    private WebElement companyField;
+    @FindBy(id = "id_work")
+    private WebElement jobtitleField;
 
     // ОПЫТ РАЗРАБОТКИ.
-    private TechStackData techStackData = null;
-    private WebElement techStackField = null;
-    private DevExpValuesData devExpValueData = null;
-    private WebElement devExpValueField = null;
+    private static TechStackData techStackData = null;
+    private static DevExpValuesData devExpValueData = null;
+    private static String choiceTechStackLocator = "//option[normalize-space()='%s']";
+    private static String choiceDevExpLocator = "//select[@id='id_experience-0-level']//option[contains(text(),'%s')]";
+    @FindBy(id = "id_experience-0-experience")
+    private WebElement techStackField;
+    @FindBy(id = "id_experience-0-level")
+    private WebElement devExpValueField;
 
     public PersonalPage(WebDriver driver) {
         super(driver);
@@ -92,12 +116,12 @@ public class PersonalPage extends AbsBasePage {
         this.birthDate = faker.date().birthday().toInstant().atZone(ZoneId.systemDefault())
                 .toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 
-        clearAndSend(driver.findElement(By.id(fNameFieldId)), firstName);
-        clearAndSend(driver.findElement(By.id(lNameFieldId)), lastName);
-        clearAndSend(driver.findElement(By.id(fNameLatinFieldId)), firstNameLatin);
-        clearAndSend(driver.findElement(By.id(lNameLatinFieldId)), lastNameLatin);
-        clearAndSend(driver.findElement(By.id(blogNameFieldId)), blogName);
-        clearAndSend(driver.findElement(By.name(dateOfBirthFieldName)), birthDate);
+        clearAndSend(fNameField, firstName);
+        clearAndSend(lNameField, lastName);
+        clearAndSend(fNameLatinField, firstNameLatin);
+        clearAndSend(lNameLatinField, lastNameLatin);
+        clearAndSend(blogNameField, blogName);
+        clearAndSend(dateOfBirthField, birthDate);
 
         // ОСНОВНАЯ ИНФОРМАЦИЯ.
 
@@ -106,61 +130,57 @@ public class PersonalPage extends AbsBasePage {
         this.selectCity(cityData);
 
         // Выбор уровня английского.
-        this.englishLvlData = EnglishLvlData.values()[faker.random().nextInt(EnglishLvlData.values().length)];
-        this.selectEnglishLvl(englishLvlData);
+        this.englishLvlsData = EnglishLvlsData.values()[faker.random().nextInt(EnglishLvlsData.values().length)];
+        this.selectEnglishLvl(englishLvlsData);
 
         // Выбор готовности к переезду.
-        this.readyToRelYesInput = driver.findElement(By.cssSelector("#id_ready_to_relocate_1"));
 
+        String workRelTemplLocator = "//span[contains(@class,'radio__label')][contains(text(),'%s')]";
         if (readyToRelYesInput.isSelected()) {
-            driver.findElement(By.xpath("//span[contains(text(), 'Нет')]")).click();
-            this.readyToMoveFlag = false;
+            $(By.xpath(String.format(workRelTemplLocator, "Нет"))).click();
+            readyToRelFlag = false;
         } else {
-            driver.findElement(By.xpath("//span[contains(text(), 'Да')]")).click();
-            this.readyToMoveFlag = true;
+            $(By.xpath(String.format(workRelTemplLocator, "Да"))).click();
+            readyToRelFlag = true;
         }
 
         // Выбор формата работы.
-        this.scheduleFulldayInput = driver.findElement(By.xpath("//input[@title = 'Полный день']"));
-        this.scheduleAgileInput = driver.findElement(By.xpath("//input[@title = 'Гибкий график']"));
-        this.scheduleRemoteInput = driver.findElement(By.xpath("//input[@title = 'Удаленно']"));
-
+        String workTypeTemplLocator = "//span[contains(text(), '%s')]";
+        $(By.xpath(String.format(workTypeTemplLocator, "Полный день"))).click();
         scheduleFulldayFlag = scheduleFulldayInput.isSelected();
+
+        $(By.xpath(String.format(workTypeTemplLocator, "Гибкий график"))).click();
         scheduleAgileFlag = scheduleAgileInput.isSelected();
+
+        $(By.xpath(String.format(workTypeTemplLocator, "Удаленно"))).click();
         scheduleRemoteFlag = scheduleRemoteInput.isSelected();
-
-        driver.findElement(By.xpath("//span[contains(text(), 'Полный день')]")).click();
-        scheduleFulldayFlag = !scheduleFulldayFlag;
-
-        driver.findElement(By.xpath("//span[contains(text(), 'Гибкий график')]")).click();
-        scheduleAgileFlag = !scheduleAgileFlag;
-
-        driver.findElement(By.xpath("//span[contains(text(), 'Удаленно')]")).click();
-        scheduleRemoteFlag = !scheduleRemoteFlag;
 
         // КОНТАКТНАЯ ИНФОРМАЦИЯ.
 
-        this.contactMethodData1 = ContactMethodData.values()[faker.random().nextInt(ContactMethodData.values().length)];
-        this.contactMethodValue1 = faker.internet().emailAddress();
-        this.addContactMethod(contactMethodData1, contactMethodValue1);
+        contactMethodsData1 = ContactMethodsData.values()[faker.random().nextInt(ContactMethodsData.values().length)];
+        contactMethodValue1 = faker.internet().emailAddress();
+        this.addContactMethod(contactMethodsData1, contactMethodValue1);
+        contactMethodSettedLocator1 = String.format("//div[contains(text(),'%s')]", contactMethodsData1.getName());
 
-        this.contactMethodData2 = ContactMethodData.values()[faker.random().nextInt(ContactMethodData.values().length)];
-        this.contactMethodValue2 = faker.phoneNumber().cellPhone();
-        this.addContactMethod(contactMethodData2, contactMethodValue2);
+        do {
+            contactMethodsData2 = ContactMethodsData.values()[faker.random().nextInt(ContactMethodsData.values().length)];
+        } while (contactMethodsData2 == contactMethodsData1);
+
+        contactMethodValue2 = faker.phoneNumber().cellPhone();
+        this.addContactMethod(contactMethodsData2, contactMethodValue2);
+        contactMethodSettedLocator2 = String.format("//div[contains(text(),'%s')]", contactMethodsData2.getName());
 
         // ДРУГОЕ.
 
         // Выбор пола.
-        this.genderData = GenderData.values()[faker.random().nextInt(GenderData.values().length)];
-        this.selectGender(genderData);
+        gendersData = GendersData.values()[faker.random().nextInt(GendersData.values().length)];
+        this.selectGender(gendersData);
 
         // Компания.
-        this.companyField = driver.findElement(By.id("id_company"));
         company = faker.company().name();
         clearAndSend(companyField, company);
 
         // Должность.
-        this.jobtitleField = driver.findElement(By.id("id_work"));
         jobtitle = faker.company().profession();
         clearAndSend(jobtitleField, jobtitle);
 
@@ -172,87 +192,114 @@ public class PersonalPage extends AbsBasePage {
     }
 
     public void saveData () {
-        driver.findElement(By.cssSelector("button[title='Сохранить и заполнить позже']")).click();
+        $(By.cssSelector("button[title='Сохранить и заполнить позже']")).click();
     }
 
     public void checkData () {
 
         // ИМЯ, ФАМИЛИЯ, ДАТА РОЖДЕНИЯ.
 
-        Assertions.assertEquals(firstName, driver.findElement(By.id(fNameFieldId)).getAttribute("value"));
-        Assertions.assertEquals(lastName, driver.findElement(By.id(lNameFieldId)).getAttribute("value"));
-        Assertions.assertEquals(firstNameLatin, driver.findElement(By.id(fNameLatinFieldId)).getAttribute("value"));
-        Assertions.assertEquals(lastNameLatin, driver.findElement(By.id(lNameLatinFieldId)).getAttribute("value"));
-        Assertions.assertEquals(blogName, driver.findElement(By.id(blogNameFieldId)).getAttribute("value"));
-        Assertions.assertEquals(birthDate, driver.findElement(By.name(dateOfBirthFieldName)).getAttribute("value"));
+        Assertions.assertEquals(firstName, fNameField.getAttribute("value"));
+        Assertions.assertEquals(lastName, lNameField.getAttribute("value"));
+        Assertions.assertEquals(firstNameLatin, fNameLatinField.getAttribute("value"));
+        Assertions.assertEquals(lastNameLatin, lNameLatinField.getAttribute("value"));
+        Assertions.assertEquals(blogName, blogNameField.getAttribute("value"));
+        Assertions.assertEquals(birthDate, dateOfBirthField.getAttribute("value"));
 
         // ОСНОВНАЯ ИНФОРМАЦИЯ.
 
+        Assertions.assertEquals(cityData.getCountryData().getName(), countryField.getText());
+        Assertions.assertEquals(cityData.getName(), cityField.getText());
+        Assertions.assertEquals(englishLvlsData.getName(), englishLvlField.getText());
+        Assertions.assertEquals(readyToRelFlag, readyToRelYesInput.isSelected());
+        Assertions.assertEquals(scheduleFulldayFlag, scheduleFulldayInput.isSelected());
+        Assertions.assertEquals(scheduleAgileFlag, scheduleAgileInput.isSelected());
+        Assertions.assertEquals(scheduleRemoteFlag, scheduleRemoteInput.isSelected());
+
         // КОНТАКТНАЯ ИНФОРМАЦИЯ.
+
+        $(By.xpath(contactMethodSettedLocator1));
+        $(By.xpath(contactMethodSettedLocator2));
+
+        // Используется сортировка, т.к. после сохранения и открытия страницы, контакты сортируются по типу в алфавитном порядке.
+        TreeMap<String, String> sortedContacts = new TreeMap<>();
+        sortedContacts.put(String.valueOf(contactMethodsData1), contactMethodValue1);
+        sortedContacts.put(String.valueOf(contactMethodsData2), contactMethodValue2);
+
+        Assertions.assertEquals(sortedContacts.get(sortedContacts.keySet().toArray()[0]), $(By.id("id_contact-0-value")).getAttribute("value"));
+        Assertions.assertEquals(sortedContacts.get(sortedContacts.keySet().toArray()[1]), $(By.id("id_contact-1-value")).getAttribute("value"));
 
         // ДРУГОЕ.
 
+        Assertions.assertTrue($(By.xpath(String.format(choiceGenderLocator, gendersData.getName()))).isSelected());
+        Assertions.assertEquals(company, companyField.getAttribute("value"));
+        Assertions.assertEquals(jobtitle, jobtitleField.getAttribute("value"));
+
         // ОПЫТ РАЗРАБОТКИ.
+
+        Assertions.assertTrue($(By.xpath(String.format(choiceTechStackLocator, techStackData.getName()))).isSelected());
+        Assertions.assertTrue($(By.xpath(String.format(choiceDevExpLocator, devExpValueData.getName()))).isSelected());
+
+        // Сброс полей контактов и опыта разработки
+
+        $(By.xpath("(//button[contains(@type,'button')][contains(text(),'Удалить')])[2]")).click();
+        $(By.xpath("(//button[contains(@type,'button')][contains(text(),'Удалить')])[4]")).click();
+        $(By.cssSelector(".experience-row__remove.ic-close.js-formset-delete")).click();
+        this.saveData();
     }
 
-    private void selectCity(ICityData cityData) {
-        this.countryField = driver.findElement(By.xpath("//input[@name= 'country']/following::div[1]"));
+    private void selectCity(ICitiesData cityData) {
         countryField.click();
         String countryDropdownSelector = String.format("button[title='%s']", cityData.getCountryData().getName());
-        driver.findElement(By.cssSelector(countryDropdownSelector)).click();
+        $(By.cssSelector(countryDropdownSelector)).click();
 
-        String cityFieldLocator = "//input[@data-title= 'Город']/following::div[1]";
-        Waiters cityWaiters = new Waiters(driver, 1);
-        cityWaiters.waitForCondition(ExpectedConditions.attributeToBe(By.xpath(cityFieldLocator), "disabled", "disabled"));
-        cityWaiters.waitForCondition(ExpectedConditions.not(ExpectedConditions.attributeToBe(By.xpath(cityFieldLocator), "disabled", "disabled")));
-        this.cityField = driver.findElement(By.xpath(cityFieldLocator));
+        StandardWaiters cityWaiter = new StandardWaiters(driver, 1);
+        cityWaiter.waitForCondition(ExpectedConditions.attributeToBe(cityField, "disabled", "disabled"));
+        cityWaiter.waitForCondition(ExpectedConditions.not(ExpectedConditions.attributeToBe(cityField, "disabled", "disabled")));
         cityField.click();
         String cityDropdownSelector = String.format("button[title='%s']", cityData.getName());
-        waiters.waitForElementVisible(By.cssSelector(cityDropdownSelector));
-        driver.findElement(By.cssSelector(cityDropdownSelector)).click();
+        standardWaiters.waitForElementVisible(By.cssSelector(cityDropdownSelector));
+        $(By.cssSelector(cityDropdownSelector)).click();
     }
 
-    private void selectEnglishLvl(EnglishLvlData englishLvlData) {
-        this.englishLvlField = driver.findElement(By.cssSelector("div[class='select lk-cv-block__input lk-cv-block__input_full js-lk-cv-custom-select']"));
+    private void selectEnglishLvl(EnglishLvlsData englishLvlsData) {
         englishLvlField.click();
-        String englishLvlDropdownLocator = String.format("//button[contains(@title,'%s')]", englishLvlData.getName());
-        driver.findElement(By.xpath(englishLvlDropdownLocator)).click();
+        String englishLvlDropdownLocator = String.format("//button[contains(@title,'%s')]", englishLvlsData.getName());
+        $(By.xpath(englishLvlDropdownLocator)).click();
     }
 
-    private void addContactMethod(ContactMethodData contactMethodData, String contactFieldValue) {
+    private void addContactMethod(ContactMethodsData contactMethodsData, String contactFieldValue) {
+
         try{
-            driver.findElement(By.xpath("//span[@class='placeholder']")).click();
+            $(By.xpath("//span[@class='placeholder']")).click();
         } catch (NoSuchElementException e) {
-            driver.findElement(By.xpath("//button[contains(text(),'Добавить')]")).click();
-            driver.findElement(By.xpath("//span[@class='placeholder']")).click();
+            $(By.xpath("//button[contains(text(),'Добавить')]")).click();
+            $(By.xpath("//span[@class='placeholder']")).click();
         }
 
-        String contactMethodDropdownLocator = String.format("(//button[@data-value='%s'])[last()]", contactMethodData.getName());
-        driver.findElement(By.xpath(contactMethodDropdownLocator)).click();
+        String contactMethodDropdownLocator = String.format("(//button[@data-value='%s'])[last()]", contactMethodsData.getName().toLowerCase());
+        standardWaiters.waitForElementVisible(By.xpath(contactMethodDropdownLocator));
 
-        WebElement contactField = driver.findElement(By.xpath("(//input[@class ='input input_straight-top-left input_straight-bottom-left lk-cv-block__input lk-cv-block__input_9 lk-cv-block__input_md-8'])[last()]"));
+        $(By.xpath(contactMethodDropdownLocator)).click();
+
+        WebElement contactField = $(By.xpath("(//input[@class ='input input_straight-top-left input_straight-bottom-left lk-cv-block__input lk-cv-block__input_9 lk-cv-block__input_md-8'])[last()]"));
         clearAndSend(contactField, contactFieldValue);
     }
 
-    private void selectGender(GenderData genderData) {
-        driver.findElement(By.id("id_gender")).click();
-        String genderDropdownLocator = String.format("//option[contains(@value, '%s')]", genderData.getValue());
-        driver.findElement(By.xpath(genderDropdownLocator)).click();
+    private void selectGender(GendersData gendersData) {
+        $(By.id("id_gender")).click();
+        $(By.xpath(String.format(choiceGenderLocator, gendersData.getName()))).click();
     }
 
     private void selectDevExp(TechStackData techStackData, DevExpValuesData devExpValuesData) {
-        driver.findElement(By.cssSelector("a[title='Добавить']")).click();
+        $(By.cssSelector("a[title='Добавить']")).click();
 
         //Выбор технологии.
-        this.techStackField = driver.findElement(By.id("id_experience-0-experience"));
         techStackField.click();
-        String techStackDropdownLocator = String.format("//option[contains(@value, '%s')]", techStackData.getName());
-        driver.findElement(By.xpath(techStackDropdownLocator)).click();
+        $(By.xpath(String.format(choiceTechStackLocator, techStackData.getName()))).click();
 
         // Выбор опыта.
-        this.devExpValueField = driver.findElement(By.id("id_experience-0-level"));
         devExpValueField.click();
-        String devExpDropdownLocator = String.format("//option[contains(text(), '%s')]", devExpValuesData.getName());
-        driver.findElement(By.xpath(devExpDropdownLocator)).click();
+        $(By.xpath(String.format(choiceDevExpLocator, devExpValuesData.getName()))).click();
     }
 }

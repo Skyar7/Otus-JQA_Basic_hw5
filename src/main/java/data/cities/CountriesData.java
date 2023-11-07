@@ -1,6 +1,6 @@
 package data.cities;
 
-public enum CountriesData implements ICityData {
+public enum CountriesData implements ICitiesData {
     BELARUS("Республика Беларусь"),
     KAZAHSTAN("Казахстан"),
     RUSSIA("Россия");
@@ -10,6 +10,7 @@ public enum CountriesData implements ICityData {
     CountriesData(String name) {
         this.name = name;
     }
+
     @Override
     public String getName() {
         return this.name;

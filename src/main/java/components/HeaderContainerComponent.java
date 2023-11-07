@@ -1,9 +1,9 @@
 package components;
 
-import components.popups.AuthPopupComponent;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import pageobject.AbsPageObject;
 
 public class HeaderContainerComponent extends AbsPageObject {
@@ -12,23 +12,24 @@ public class HeaderContainerComponent extends AbsPageObject {
         super(driver);
     }
 
-    public void useLoginButton () {
+    @FindBy(xpath = "//div[./nav]")
+    private WebElement headerContainer;
 
-        String loginButtonLocator = "//button[contains(text(),'Войти')]";
-        waiters.waitForElementVisible(By.cssSelector(loginButtonLocator));
-        driver.findElement(By.xpath(loginButtonLocator)).click();
+    public void useLoginButton () {
+        WebElement loginButton = headerContainer.findElement(By.xpath(".//button[contains(text(),'Войти')]"));
+        loginButton.click();
     }
 
     public void goToPersonalPage() {
 
         String headNameSelector = ".sc-199a3eq-0.fJMWHf";
-        waiters.waitForElementVisible(By.cssSelector(headNameSelector));
-        WebElement headName = driver.findElement(By.cssSelector(headNameSelector));
+        standardWaiters.waitForElementVisible(By.cssSelector(headNameSelector));
+        WebElement headName = $(By.cssSelector(headNameSelector));
         moveToElement(headName);
 
         String myProfileLocator = "//a[contains(text(), 'Мой профиль')]";
-        waiters.waitForElementVisible(By.xpath(myProfileLocator));
-        WebElement dropDownMyProfile = driver.findElement(By.xpath(myProfileLocator));
+        standardWaiters.waitForElementVisible(By.xpath(myProfileLocator));
+        WebElement dropDownMyProfile = $(By.xpath(myProfileLocator));
         moveAndClick(dropDownMyProfile);
     }
 }

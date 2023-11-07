@@ -1,6 +1,6 @@
 package data.cities;
 
-public enum CitiesData implements ICityData {
+public enum CitiesData implements ICitiesData {
     GOMEL("Гомель", CountriesData.BELARUS),
     MINSK("Минск", CountriesData.BELARUS),
 
@@ -10,7 +10,6 @@ public enum CitiesData implements ICityData {
     ABAKAN("Абакан", CountriesData.RUSSIA),
     MOSCOW("Москва", CountriesData.RUSSIA),
     KRASNOYARSK("Красноярск", CountriesData.RUSSIA);
-
 
     private String name;
     private CountriesData countriesData;

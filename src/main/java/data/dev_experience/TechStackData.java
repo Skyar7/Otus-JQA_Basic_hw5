@@ -1,13 +1,13 @@
 package data.dev_experience;
 
 public enum TechStackData {
-    C("1"),
-    CPLUS("2"),
-    JAVA("3"),
-    CSHARP("4"),
-    GO("5"),
-    ANDROID("7"),
-    PYTHON("10");
+    C("C"),
+    CPLUS("C++"),
+    JAVA("Java"),
+    CSHARP("C#"),
+    GO("Go"),
+    ANDROID("Android"),
+    PYTHON("Python");
 
     private String name;
 

@@ -2,35 +2,18 @@ package pageobject;
 
 import com.github.javafaker.Faker;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import waiters.Waiters;
+import org.openqa.selenium.support.PageFactory;
+import waiters.StandardWaiters;
 
-public abstract class AbsPageObject {
-
-    protected WebDriver driver;
-    protected Actions actions;
-    protected Waiters waiters;
+public abstract class AbsPageObject extends ElementActions {
+    protected StandardWaiters standardWaiters;
     protected Faker faker;
 
     public AbsPageObject (WebDriver driver) {
-        this.driver = driver;
-        this.actions = new Actions(driver);
-        this.waiters = new Waiters(driver);
+        super(driver);
+        this.standardWaiters = new StandardWaiters(driver);
         this.faker = new Faker();
-    }
 
-    public void clearAndSend(WebElement element, String field) {
-        element.clear();
-        element.sendKeys(field);
-    }
-
-    public void moveToElement(WebElement element) {
-        actions.moveToElement(element).perform();
-    }
-
-    public void moveAndClick(WebElement element) {
-        actions.moveToElement(element);
-        element.click();
+        PageFactory.initElements(driver, this);
     }
 }

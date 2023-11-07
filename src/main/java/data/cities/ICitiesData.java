@@ -1,7 +1,6 @@
 package data.cities;
 
-public interface ICityData {
-
+public interface ICitiesData {
     String getName();
     CountriesData getCountryData();
 }

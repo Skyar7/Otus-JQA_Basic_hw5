@@ -25,7 +25,7 @@ public class Biography_Test {
         headerContainerComponent = new HeaderContainerComponent(driver);
     }
 
-//    @AfterEach
+    @AfterEach
     public void shutdownDriver() {
         if (this.driver != null) {
             this.driver.close();
@@ -64,13 +64,16 @@ public class Biography_Test {
 
         log.info("Проверка данных");
         personalPage.checkData();
-
     }
+
     public void login() {
         AuthPopupComponent authPopupComponent = new AuthPopupComponent(driver);
-        HeaderContainerComponent headerContainerComponent = new HeaderContainerComponent(driver);
+        authPopupComponent.popupShouldNotBeVisible();
 
+        headerContainerComponent = new HeaderContainerComponent(driver);
         headerContainerComponent.useLoginButton();
+
+        authPopupComponent.popupShouldBeVisible();
         authPopupComponent.loginDataEnter();
     }
 }
